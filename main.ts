@@ -34,6 +34,26 @@ export default class PandocPlugin extends Plugin {
         this.registerCommands();
 
         this.addSettingTab(new PandocPluginSettingTab(this.app, this));
+
+        // Preview-only: flatten aliased citation links in Obsidian preview
+        // Example: [[@key|Alias]] renders as plain text "Alias" while editing
+        this.registerMarkdownPostProcessor((el: HTMLElement) => {
+            if (!this.settings.flattenAliasedCitationsInPreview) return;
+            const anchors = el.querySelectorAll('a.internal-link');
+            anchors.forEach((a: Element) => {
+                const anchor = a as HTMLAnchorElement;
+                const display = (anchor.textContent || '').trim();
+                const targetRaw = (anchor.getAttribute('data-href') || anchor.getAttribute('href') || '').trim();
+                if (!display || !targetRaw) return;
+                // Decode once, also account for encoded '@' (%40)
+                const decoded = decodeURIComponent(targetRaw);
+                const isCitation = decoded.startsWith('@') || targetRaw.startsWith('%40');
+                const isAliased = decoded !== display;
+                if (isCitation && isAliased) {
+                    anchor.replaceWith(document.createTextNode(display));
+                }
+            });
+        });
     }
 
     registerCommands() {

@@ -30,6 +30,8 @@ export interface PandocPluginSettings {
     extraArguments: string,
     // Export from HTML or from markdown?
     exportFrom: 'html' | 'md',
+    // Preview-only: flatten aliased citation links like [[@key|Alias]] to Alias
+    flattenAliasedCitationsInPreview: boolean,
 }
 
 export const DEFAULT_SETTINGS: PandocPluginSettings = {
@@ -46,6 +48,7 @@ export const DEFAULT_SETTINGS: PandocPluginSettings = {
     outputFolder: null,
     extraArguments: '',
     exportFrom: 'html',
+    flattenAliasedCitationsInPreview: true,
 }
 
 export function replaceFileExtension(file: string, ext: string): string {

@@ -83,6 +83,16 @@ export default class PandocPluginSettingTab extends PluginSettingTab {
                 }));
 
         new Setting(containerEl)
+            .setName("Flatten aliased citations in preview")
+            .setDesc("Preview-only: render [[@citekey|Alias]] as plain text 'Alias' while editing. Does not affect exports.")
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.flattenAliasedCitationsInPreview)
+                .onChange(async (value: boolean) => {
+                    this.plugin.settings.flattenAliasedCitationsInPreview = value;
+                    await this.plugin.saveSettings();
+                }));
+
+        new Setting(containerEl)
             .setName("Export files from HTML or markdown?")
             .setDesc("Export from markdown, or from the HTML visible in Obsidian? HTML supports fancy plugin features, markdown supports Pandoc features like citations.")
             .addDropdown(dropdown => dropdown
