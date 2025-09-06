@@ -10,3 +10,7 @@ yarn.lock
 data.json
 
 main.js
+
+# macOS clutter
+.DS_Store
+obsidian-pandoc.code-workspace
